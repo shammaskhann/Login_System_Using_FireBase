@@ -15,6 +15,8 @@ class Signup_Screen extends StatefulWidget {
 class _Signup_ScreenState extends State<Signup_Screen> {
   final email = TextEditingController();
   final password = TextEditingController();
+
+  bool loading = false;
   final _formKey = GlobalKey<FormState>();
   FirebaseAuth _auth = FirebaseAuth.instance; //Aunthentication instance
   @override
@@ -22,6 +24,27 @@ class _Signup_ScreenState extends State<Signup_Screen> {
     email.dispose();
     password.dispose();
     super.dispose();
+  }
+
+  void checkLogin() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .createUserWithEmailAndPassword(
+            email: email.text.toString(), password: password.text.toString())
+        .then((value) {
+      setState(() {
+        loading = false;
+      });
+      Utils().toastMessage("Sign up successful");
+      Navigator.pop(context);
+    }).catchError((e) {
+      setState(() {
+        loading = false;
+      });
+      Utils().toastMessage(e.toString());
+    }); //catchError is used to catch the error if any error occur while login
   }
 
   @override
@@ -34,6 +57,14 @@ class _Signup_ScreenState extends State<Signup_Screen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Text("Register Your Account",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple)),
+              const SizedBox(
+                height: 40,
+              ),
               Form(
                 key: _formKey,
                 child: Column(
@@ -77,18 +108,10 @@ class _Signup_ScreenState extends State<Signup_Screen> {
               ),
               RoundButton(
                 title: "Sign up",
+                loading: loading,
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
-                    _auth
-                        .createUserWithEmailAndPassword(
-                            email: email.text.toString(),
-                            password: password.text.toString())
-                        .then((value) {
-                      Utils().toastMessage("Sign up successful");
-                      Navigator.pop(context);
-                    }).catchError((e) {
-                      Utils().toastMessage(e.toString());
-                    });
+                    checkLogin();
                   }
                 },
               ),

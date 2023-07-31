@@ -1,8 +1,11 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../utils/utils.dart';
 import '../widgets/RoundButton.dart';
+import 'HomeScreen.dart';
 import 'Signup_Screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,14 +16,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool loading = false;
   final email = TextEditingController();
   final password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance; //Aunthentication instance
+
   @override
   void dispose() {
     email.dispose();
     password.dispose();
     super.dispose();
+  }
+
+  void login() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .signInWithEmailAndPassword(email: email.text, password: password.text)
+        .then((value) => {
+              Utils().toastMessage("Login Successful"),
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen())),
+              setState(() {
+                loading = false;
+              }),
+            })
+        .catchError((e) {
+      Utils().toastMessage(e.toString());
+    });
   }
 
   @override
@@ -102,8 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   title: "Login",
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      print("Email: ${email.text}");
-                      print("Password: ${password.text}");
+                      login();
                     }
                   },
                 ),
