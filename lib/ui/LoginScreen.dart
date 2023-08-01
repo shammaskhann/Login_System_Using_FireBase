@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../utils/utils.dart';
 import '../widgets/RoundButton.dart';
 import 'HomeScreen.dart';
+import 'LoginWithPhoneNumber.dart';
 import 'Signup_Screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -45,6 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
             })
         .catchError((e) {
       Utils().toastMessage(e.toString());
+      setState(() {
+        loading = false;
+      });
     });
   }
 
@@ -144,11 +148,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Signup_Screen()));
+                                builder: (context) => const Signup_Screen()));
                       },
-                      child: Text('Sign up'),
+                      child: const Text('Sign up'),
                     )
                   ],
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const LoginWithPhoneNumber()));
+                  },
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Login with Phone Number",
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
