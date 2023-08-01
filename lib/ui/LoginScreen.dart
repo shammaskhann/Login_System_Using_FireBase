@@ -125,6 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 RoundButton(
                   title: "Login",
+                  loading: loading,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       login();
