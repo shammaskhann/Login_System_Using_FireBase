@@ -86,6 +86,16 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const Text(
+                  "Login",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                ),
                 Form(
                   key: _formKey,
                   child: Column(
